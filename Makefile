@@ -26,7 +26,7 @@ devconfigure:
 	rm config/web.php
 	mv config/web.php_new config/web.php
 
-	cat Vagrantfile | sed "s/vagrantmashine/vagrantmashine_${NAME}/g" > Vagrantfile_new
+	cat Vagrantfile | sed "s/vagrantmashine/vagrantmashine.${NAME}/g" > Vagrantfile_new
 	rm Vagrantfile
 	mv Vagrantfile_new Vagrantfile
 
