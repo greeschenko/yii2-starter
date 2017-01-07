@@ -1,6 +1,6 @@
 #Makefile
 
-NAME='test'
+NAME=myproject
 
 test:
 
@@ -10,28 +10,32 @@ install:
 
 	composer global require "fxp/composer-asset-plugin:^1.2.0"
 	composer create-project --prefer-dist yiisoft/yii2-app-basic basic
-	mv -vf basic/* $PWD
+	cp -rvf basic/. ${PWD}
 	rm -drvf basic
 
 addvagrant:
 
-	echo -n "Add Vagrant(Y/n)? "
+	git clone https://github.com/greeschenko/vagrant-devenv.git
+	rm -drvf vagrant-devenv/.git
+	rm -drvf vagrant-devenv/LICENSE
+	rm -drvf vagrant-devenv/README.md
+	cp -rv vagrant-devenv/* ${PWD}
+	rm -drvf vagrant-devenv
+	cat config/db.php | sed "s/yii2basic/${NAME}/g" > config/db.php_tmp
+	cat config/db.php_tmp | sed "/password/s/''/'rootpass'/g" > config/db.php_new
+	rm config/db.php_tmp
+	rm config/db.php
+	mv config/db.php_new config/db.php
 
-	type=
-	while [[ ! $type ]]; do
-		read -r -n 1 -s answer
-		if [[ $answer = [Yy] ]]; then
-			git clone https://github.com/greeschenko/vagrant-devenv.git
-			rm -drvf vagrant-devenv/.git
-			rm -drvf vagrant-devenv/LICENSE
-			rm -drvf vagrant-devenv/README.md
-			cp -rv vagrant-devenv/* $PWD
-			rm -drvf vagrant-devenv
-			break
-		elif [[ $answer = [Nn] ]]; then
-			break
-		fi
-	done
+	cat config/test_db.php | sed "s/yii2_basic_tests/${NAME}/g" > config/test_db.php_tmp
+	rm config/test_db.php_tmp
+	rm config/test_db.php
+	mv config/test_db.php_new config/test_db.php
+
+	cat config/web.php | sed "s/basic/${NAME}/g" > config/web.php_tmp
+	rm config/web.php_tmp
+	rm config/web.php
+	mv config/web.php_new config/web.php
 
 configure:
 
@@ -78,8 +82,8 @@ configure:
 	composer global require "codeception/verify=*"
 	composer install
 
-	chmod -R 776 runtime
-	chmod -R 776 web/assets
+	chmod -R 777 runtime
+	chmod -R 777 web/assets
 
 
 	echo -n "Add post-merge hook(Y/n)? "
