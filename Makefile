@@ -1,10 +1,7 @@
 #Makefile
 
 NAME=myproject
-
-test:
-
-	@echo $(NAME)
+IPNUM=`wc -l /etc/hosts | awk '{print($$1)}'`
 
 install:
 
@@ -13,31 +10,43 @@ install:
 	cp -rvf basic/. ${PWD}
 	rm -drvf basic
 
-addvagrant:
+devconfigure:
 
-	git clone https://github.com/greeschenko/vagrant-devenv.git
-	rm -drvf vagrant-devenv/.git
-	rm -drvf vagrant-devenv/LICENSE
-	rm -drvf vagrant-devenv/README.md
-	cp -rv vagrant-devenv/* ${PWD}
-	rm -drvf vagrant-devenv
 	cat config/db.php | sed "s/yii2basic/${NAME}/g" > config/db.php_tmp
 	cat config/db.php_tmp | sed "/password/s/''/'rootpass'/g" > config/db.php_new
 	rm config/db.php_tmp
 	rm config/db.php
 	mv config/db.php_new config/db.php
 
-	cat config/test_db.php | sed "s/yii2_basic_tests/${NAME}/g" > config/test_db.php_tmp
-	rm config/test_db.php_tmp
+	cat config/test_db.php | sed "s/yii2_basic_tests/${NAME}/g" > config/test_db.php_new
 	rm config/test_db.php
 	mv config/test_db.php_new config/test_db.php
 
-	cat config/web.php | sed "s/basic/${NAME}/g" > config/web.php_tmp
-	rm config/web.php_tmp
+	cat config/web.php | sed "s/basic/${NAME}/g" > config/web.php_new
 	rm config/web.php
 	mv config/web.php_new config/web.php
 
-configure:
+	cat Vagrantfile | sed "s/vagrantmashine/vagrantmashine_${NAME}/g" > Vagrantfile_new
+	rm Vagrantfile
+	mv Vagrantfile_new Vagrantfile
+
+	IPNUM=`wc -l /etc/hosts | awk '{print($$1)}'`
+
+	cat Vagrantfile | sed "s/192.168.88.88/192.168.88.$$(( ${IPNUM} + 1 ))/g" > Vagrantfile_new
+	rm Vagrantfile
+	mv Vagrantfile_new Vagrantfile
+
+	cat provision.sh | sed "s/myproject/${NAME}/g" > provision.sh_new
+	rm provision.sh
+	mv provision.sh_new provision.sh
+
+	sudo -- sh -c "echo 192.168.88.$$(( ${IPNUM} + 1 )) ${NAME}.ga >> /etc/hosts"
+
+	vagrant up
+
+	chromium ${NAME}.ga
+
+serverconfigure:
 
 	CPSPATH='/usr/local/bin/composer'
 	if [[ ! -f $CPSPATH ]]; then
@@ -107,6 +116,6 @@ work:
 
 	vagrant up
 	xterm -e 'cd tests; /bin/bash' &
-	xterm -e 'vagrant status & vagrant ssh -- -t "cd /var/www/site; /bin/bash" ' &
+	xterm -e 'vagrant status & vagrant ssh -- -t "cd /var/www/project; /bin/bash" ' &
 	xterm -e 'vagrant status & vagrant ssh -- -t "mysql -uroot -prootpass; /bin/bash" ' &
 	vim
