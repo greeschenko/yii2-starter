@@ -1,5 +1,14 @@
 #Makefile
 
+test:
+
+	foo= $(NAME)
+	ifdef foo
+	frobozz=yes
+	else
+	frobozz=no
+	endif
+
 install:
 
 	composer global require "fxp/composer-asset-plugin:^1.2.0"
