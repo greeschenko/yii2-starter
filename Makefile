@@ -1,19 +1,16 @@
 #Makefile
 
+NAME='test'
+
 test:
 
-	foo= $(NAME)
-	ifdef foo
-	frobozz=yes
-	else
-	frobozz=no
-	endif
+	@echo $(NAME)
 
 install:
 
 	composer global require "fxp/composer-asset-plugin:^1.2.0"
 	composer create-project --prefer-dist yiisoft/yii2-app-basic basic
-	mv -rvf basic/* $PWD
+	mv -vf basic/* $PWD
 	rm -drvf basic
 
 addvagrant:
