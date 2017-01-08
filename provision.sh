@@ -5,7 +5,7 @@ NAME='myproject'
 PASSWORD='rootpass'
 
 # create project folder
-sudo mkdir "/var/www/myproject"
+sudo mkdir "/var/www/project"
 
 # update / upgrade
 sudo apt-get update
@@ -39,7 +39,7 @@ echo "      Options Indexes FollowSymLinks" >> /etc/apache2/sites-available/000-
 echo "      AllowOverride all" >> /etc/apache2/sites-available/000-default.conf
 echo "      Require all granted" >> /etc/apache2/sites-available/000-default.conf
 echo "  </Directory>" >> /etc/apache2/sites-available/000-default.conf
-echo "  DocumentRoot /var/www/myproject/web/" >> /etc/apache2/sites-available/000-default.conf
+echo "  DocumentRoot /var/www/project/web/" >> /etc/apache2/sites-available/000-default.conf
 echo "  ErrorLog ${APACHE_LOG_DIR}/${NAME}_error.log" >> /etc/apache2/sites-available/000-default.conf
 echo "  CustomLog ${APACHE_LOG_DIR}/${NAME}_access.log combined" >> /etc/apache2/sites-available/000-default.conf
 echo "  Include conf-available/serve-cgi-bin.conf" >> /etc/apache2/sites-available/000-default.conf

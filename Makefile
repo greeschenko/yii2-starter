@@ -42,6 +42,8 @@ devconfigure:
 
 	sudo -- sh -c "echo 192.168.88.$$(( ${IPNUM} + 1 )) ${NAME}.ga >> /etc/hosts"
 
+	echo '.vagrant/' >> .gitignore
+
 	vagrant up
 
 	chromium ${NAME}.ga
