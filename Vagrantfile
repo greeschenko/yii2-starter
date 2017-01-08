@@ -18,7 +18,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.hostname = "vagrantmashine"
 
   # Create a private network, which allows host-only access to the machine using a specific IP.
-  config.vm.network "private_network", ip: "192.168.88.27"
+  config.vm.network "private_network", ip: "192.168.88.88"
   # Forward ports to Apache and MySQL
   config.vm.network "forwarded_port", guest: 80, host: 8080, auto_correct: true
   config.vm.network "forwarded_port", guest: 3306, host: 8088, auto_correct: true
